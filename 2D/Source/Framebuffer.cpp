@@ -11,7 +11,6 @@ Framebuffer::Framebuffer(const Renderer& renderer, int width, int height)
 	if (!m_texture)
 	{
 		std::cerr << "Error creating SDL window: " << SDL_GetError() << std::endl;
-
 	}
 	m_buffer.resize(m_width * m_height);
 }
@@ -39,11 +38,11 @@ void Framebuffer::DrawPoint(int x, int y, const colour_t& color)
 
 void Framebuffer::DrawRect(int x, int y, int w, int h, colour_t colour)
 {
-	//for ()
-	//{
-	//	for ()
-	//	{
-
-	//	}
-	//}
+	for (int i = x; i < w; i++)
+	{
+		for (int j = y; j < h; j++)
+		{
+			DrawPoint(i, j, colour);
+		}
+	}
 }
