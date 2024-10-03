@@ -32,14 +32,14 @@ int main(int argc, char* argv[])
         //SDL_RenderClear(renderer.m_renderer);
 
         framebuffer.Clear(colour_t{0, 0, 0, 255});
-        for (int i = 0; i < 100; i++)
-        {
-            int x = rand() % 200;
-            int y = rand() % 150;
-            framebuffer.DrawPoint(x, y, { 255,255,255,255 });
-        }
+        //for (int i = 0; i < 100; i++)
+        //{
+        //    int x = rand() % 200;
+        //    int y = rand() % 150;
+        //    framebuffer.DrawPoint(x, y, { 255,255,255,255 });
+        //}
 
-        framebuffer.DrawRect(10,10,100,100, {0,255,0,255});
+        //framebuffer.DrawRect(10,10,100,100, {0,255,0,255});
 
         framebuffer.Update();
 

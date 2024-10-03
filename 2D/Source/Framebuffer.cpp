@@ -39,11 +39,11 @@ void Framebuffer::DrawPoint(int x, int y, const colour_t& color)
 
 void Framebuffer::DrawRect(int x, int y, int w, int h, colour_t colour)
 {
-	for ()
-	{
-		for ()
-		{
+	//for ()
+	//{
+	//	for ()
+	//	{
 
-		}
-	}
+	//	}
+	//}
 }
