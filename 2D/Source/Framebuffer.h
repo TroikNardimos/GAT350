@@ -20,6 +20,14 @@ public:
 	void DrawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, const colour_t& colour);
 	void DrawCircle(int xc, int yc, int r, const colour_t& colour);
 
+	void DrawLinearCurve(int x1, int y1, int x2, int y2, const colour_t& colour);
+	void DrawQuadraticCurve(int x1, int y1, int x2, int y2, int x3, int y3, const colour_t& colour);
+	void DrawCubicCurve(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, const colour_t& colour);
+
+	void DrawImage(int x, int y, const class Image& image);
+
+	std::vector<colour_t>& GetBuffer() { return m_buffer; }
+
 private:
 	void DrawCircleSegment(int xc, int yc, int x, int y, const colour_t& colour);
 
