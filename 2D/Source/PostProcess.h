@@ -15,4 +15,5 @@ namespace PostProcess
 	void GaussianBlur(std::vector<colour_t>& buffer, int width, int height);
 	void Sharpen(std::vector<colour_t>& buffer, int width, int height);
 	void Edge(std::vector<colour_t>& buffer, int width, int height, int threshold);
+	void Emboss(std::vector<colour_t>& buffer, int width, int height);
 }

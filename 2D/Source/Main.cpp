@@ -41,11 +41,11 @@ int main(int argc, char* argv[])
 
         framebuffer.DrawImage(100, 100, image);
 
-        PostProcess::Invert(framebuffer.m_buffer);
+        //PostProcess::Invert(framebuffer.m_buffer);
         //PostProcess::Monochrome(framebuffer.m_buffer);
         //PostProcess::ColourBalance(framebuffer.m_buffer, 150, -50, -50);
         //PostProcess::Brightness(framebuffer.m_buffer, 100);
-        //PostProcess::Noise(framebuffer.m_buffer, 255);
+        //PostProcess::Noise(framebuffer.m_buffer, 100);
         //PostProcess::Threshhold(framebuffer.m_buffer, 100);
         //PostProcess::Posterize(framebuffer.m_buffer, 4);
 
@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
         }
         //PostProcess::Sharpen(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
         //PostProcess::Edge(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height, 10);
+        PostProcess::Emboss(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
 
         framebuffer.Update();
 
