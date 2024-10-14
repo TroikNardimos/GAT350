@@ -1,8 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <vector>
-
-using colour_t = SDL_Color;
+#include "Colour.h"
 
 class Framebuffer
 {
@@ -14,6 +13,8 @@ public:
 	void Clear(const colour_t& color);
 
 	void DrawPoint(int x, int y, const colour_t& color);
+	void DrawPointClip(int x, int y, const colour_t& color);
+
 	void DrawRect(int x, int y, int w, int h, const colour_t& colour);
 	void DrawLineSlope(int x1, int y1, int x2, int y2, const colour_t& colour);
 	void DrawLine(int x1, int y1, int x2, int y2, const colour_t& colour);

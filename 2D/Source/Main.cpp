@@ -17,6 +17,10 @@ int main(int argc, char* argv[])
     Image image;
     image.Load("landscape.jpg");
 
+    Image imageAlpha;
+    imageAlpha.Load("colours.png");
+    PostProcess::Alpha(imageAlpha.m_buffer, 100);
+
     bool quit = false;
     while (!quit)
     {
@@ -39,8 +43,13 @@ int main(int argc, char* argv[])
 
         framebuffer.Clear(colour_t{0, 0, 0, 255});
 
+        SetBlendMode(BlendMode::Normal);
         framebuffer.DrawImage(100, 100, image);
+        SetBlendMode(BlendMode::Alpha);
+        framebuffer.DrawImage(100, 100, imageAlpha);
 
+
+#pragma region post_rocessing
         //PostProcess::Invert(framebuffer.m_buffer);
         //PostProcess::Monochrome(framebuffer.m_buffer);
         //PostProcess::ColourBalance(framebuffer.m_buffer, 150, -50, -50);
@@ -49,13 +58,18 @@ int main(int argc, char* argv[])
         //PostProcess::Threshhold(framebuffer.m_buffer, 100);
         //PostProcess::Posterize(framebuffer.m_buffer, 4);
 
-        for (int i = 0; i < 10; i++) {
-            //PostProcess::BoxBlur(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
-            //PostProcess::GaussianBlur(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
-        }
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    PostProcess::BoxBlur(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
+        //    PostProcess::GaussianBlur(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
+        //}
+        
         //PostProcess::Sharpen(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
         //PostProcess::Edge(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height, 10);
-        PostProcess::Emboss(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
+        //PostProcess::Emboss(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
+#pragma endregion
+
+
 
         framebuffer.Update();
 

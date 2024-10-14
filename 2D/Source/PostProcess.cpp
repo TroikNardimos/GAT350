@@ -75,6 +75,14 @@ namespace PostProcess
 				c.b = (c.b / level) * level;
 			});
 	}
+	void Alpha(std::vector<colour_t>& buffer, uint8_t alpha)
+	{
+		std::for_each(buffer.begin(), buffer.end(), [alpha](auto& c)
+			{
+				c.a = alpha;
+			});
+	}
+
 	void BoxBlur(std::vector<colour_t>& buffer, int width, int height)
 	{
 		std::vector<colour_t> source = buffer;
