@@ -4,6 +4,9 @@
 #include "Image.h"
 #include "PostProcess.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 // GitHub: https://github.com/TroikNardimos/GAT350
 
 int main(int argc, char* argv[])
@@ -20,6 +23,9 @@ int main(int argc, char* argv[])
     Image imageAlpha;
     imageAlpha.Load("colours.png");
     PostProcess::Alpha(imageAlpha.m_buffer, 100);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
 
     bool quit = false;
     while (!quit)
