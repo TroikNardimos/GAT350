@@ -12,9 +12,10 @@ enum class BlendMode
 	Multiply
 };
 
+void SetBlendMode(BlendMode blendMode);
+colour_t ColourBlend(const colour_t& src, const colour_t& dst);
+
 colour_t NormalBlend(const colour_t& src, const colour_t& dst);
 colour_t AlphaBlend(const colour_t& src, const colour_t& dst);
 colour_t AdditiveBlend(const colour_t& src, const colour_t& dst);
-
-void SetBlendMode(BlendMode blendMode);
-colour_t ColourBlend(const colour_t& src, const colour_t& dst);
+colour_t MultiplyBlend(const colour_t& src, const colour_t& dst);

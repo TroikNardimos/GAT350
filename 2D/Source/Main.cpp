@@ -3,6 +3,7 @@
 #include "MathUtils.h"
 #include "Image.h"
 #include "PostProcess.h"
+#include "Model.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,6 +16,8 @@ int main(int argc, char* argv[])
     renderer.Initialize();
     renderer.CreateWindow("2D", 800, 600);
 
+    SetBlendMode(BlendMode::Normal);
+
     Framebuffer framebuffer(renderer, 1200, 900);
 
     Image image;
@@ -24,8 +27,8 @@ int main(int argc, char* argv[])
     imageAlpha.Load("colours.png");
     PostProcess::Alpha(imageAlpha.m_buffer, 100);
 
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+    vertices_t vertices = { { -5, 5, 0 }, { 5, 5, 0 }, { -5, -5, 0 } };
+    Model model(vertices, { 0,255,0,255 });
 
     bool quit = false;
     while (!quit)
@@ -49,11 +52,15 @@ int main(int argc, char* argv[])
 
         framebuffer.Clear(colour_t{0, 0, 0, 255});
 
+        int ticks = SDL_GetTicks();
+        float time = ticks * 0.001f;
+
+#pragma region alpha_blend
         SetBlendMode(BlendMode::Normal);
         framebuffer.DrawImage(100, 100, image);
-        SetBlendMode(BlendMode::Alpha);
+        SetBlendMode(BlendMode::Multiply);
         framebuffer.DrawImage(100, 100, imageAlpha);
-
+#pragma endregion
 
 #pragma region post_rocessing
         //PostProcess::Invert(framebuffer.m_buffer);
@@ -75,7 +82,13 @@ int main(int argc, char* argv[])
         //PostProcess::Emboss(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
 #pragma endregion
 
+        //glm::mat4 modelMatrix = glm::mat4(1.0f);
+        //glm::mat4 translate = glm::translate(modelMatrix, glm::vec3(240.0f, 240.0f, 0.0f));
+        //glm::mat4 scale = glm::scale(modelMatrix, glm::vec3(20));
+        //glm::mat4 rotate = glm::rotate(modelMatrix, glm::radians(time * 90), glm::vec3{1,1,1});
+        //modelMatrix = translate * scale * rotate;
 
+        //model.Draw(framebuffer, modelMatrix);
 
         framebuffer.Update();
 
