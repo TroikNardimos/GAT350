@@ -132,7 +132,7 @@ void Framebuffer::DrawLine(int x1, int y1, int x2, int y2, const colour_t& colou
 	
 	for (int x = x1, y = y1; x <= x2; x++)
 	{
-		(steep) ? DrawPoint(y, x, colour) : DrawPoint(x, y, colour);
+		(steep) ? DrawPointClip(y, x, colour) : DrawPointClip(x, y, colour);
 		error -= dy;
 		if (error < 0)
 		{
