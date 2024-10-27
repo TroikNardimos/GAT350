@@ -52,18 +52,18 @@ int main(int argc, char* argv[])
     std::shared_ptr<Model> model1 = std::make_shared<Model>();
     std::shared_ptr<Model> model2 = std::make_shared<Model>();
     std::shared_ptr<Model> model3 = std::make_shared<Model>();
-    model1->Load("cube.obj");
-    model2->Load("cube.obj");
-    model3->Load("cube.obj");
+    model1->Load("teapot.obj");
+    model2->Load("sphere.obj");
+    model3->Load("torus.obj");
     model1->SetColour({ 255, 0, 0, 255 });
     model2->SetColour({ 0, 255, 0, 255 });
     model3->SetColour({ 0, 0, 255, 255 });
 
     std::vector<std::unique_ptr<Actor>> actors;
 
-    Transform transform1{ {20.0f, 20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{3}};
+    Transform transform1{ {20.0f, 20.0f, 20.0f}, glm::vec3{0,0,45}, glm::vec3{3}};
     Transform transform2{ {20.0f, -20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{3}};
-    Transform transform3{ {-20.0f, 20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{3}};
+    Transform transform3{ {-20.0f, 20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{10}};
     std::unique_ptr<Actor> actor1 = std::make_unique<Actor>(transform1, model1);
     std::unique_ptr<Actor> actor2 = std::make_unique<Actor>(transform2, model2);
     std::unique_ptr<Actor> actor3 = std::make_unique<Actor>(transform3, model3);
@@ -155,7 +155,7 @@ int main(int argc, char* argv[])
 
         camera.SetView(cameraTransform.position, cameraTransform.position + cameraTransform.GetForward());
 
-        //transform.rotation.z += 90 * time.GetDeltaTime();
+        //transform.rotation.y += 90 * time.GetDeltaTime();
 
         framebuffer.DrawImage(0, 0, image);
 
