@@ -27,23 +27,23 @@ void Framebuffer::Update()
 	SDL_UpdateTexture(m_texture, NULL, m_buffer.data(), m_pitch);
 }
 
-void Framebuffer::Clear(const colour_t& color)
+void Framebuffer::Clear(const colour_t& colour)
 {
-	std::fill(m_buffer.begin(), m_buffer.end(), color);
+	std::fill(m_buffer.begin(), m_buffer.end(), colour);
 }
 
-void Framebuffer::DrawPoint(int x, int y, const colour_t& color)
+void Framebuffer::DrawPoint(int x, int y, const colour_t& colour)
 {
 	colour_t& dest = m_buffer[x + (y * m_width)];
-	dest = ColourBlend(color, dest);
+	dest = ColourBlend(colour, dest);
 }
 
-void Framebuffer::DrawPointClip(int x, int y, const colour_t& color)
+void Framebuffer::DrawPointClip(int x, int y, const colour_t& colour)
 {
 	if (x >= m_width || x < 0 || y >= m_height || y < 0) return;
 
 	colour_t& dest = m_buffer[x + (y * m_width)];
-	dest = ColourBlend(color, dest);
+	dest = ColourBlend(colour, dest);
 }
 
 void Framebuffer::DrawRect(int x, int y, int w, int h, const colour_t& colour)

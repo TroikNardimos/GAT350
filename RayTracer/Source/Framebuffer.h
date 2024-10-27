@@ -10,10 +10,10 @@ public:
 	~Framebuffer();
 
 	void Update();
-	void Clear(const colour_t& color);
+	void Clear(const colour_t& colour);
 
-	void DrawPoint(int x, int y, const colour_t& color);
-	void DrawPointClip(int x, int y, const colour_t& color);
+	void DrawPoint(int x, int y, const colour_t& colour);
+	void DrawPointClip(int x, int y, const colour_t& colour);
 
 	void DrawRect(int x, int y, int w, int h, const colour_t& colour);
 	void DrawLineSlope(int x1, int y1, int x2, int y2, const colour_t& colour);

@@ -20,13 +20,14 @@
 int main(int argc, char* argv[])
 {
     Time time;
-    Input input;
-    input.Initialize();
-
 
     Renderer renderer;
     renderer.Initialize();
     renderer.CreateWindow("2D", 800, 600);
+
+    Input input;
+    input.Initialize();
+    input.Update();
 
     SetBlendMode(BlendMode::Normal);
 
@@ -48,19 +49,30 @@ int main(int argc, char* argv[])
     //vertices_t vertices = { { -5, 5, 0 }, { 5, 5, 0 }, { -5, -5, 0 } };
     //Model model(vertices, { 0,255,0,255 });
 
-    std::shared_ptr<Model> model = std::make_shared<Model>();
-    model->Load("cube.obj");
-    model->SetColour({ 0, 255, 0, 255 });
+    std::shared_ptr<Model> model1 = std::make_shared<Model>();
+    std::shared_ptr<Model> model2 = std::make_shared<Model>();
+    std::shared_ptr<Model> model3 = std::make_shared<Model>();
+    model1->Load("cube.obj");
+    model2->Load("cube.obj");
+    model3->Load("cube.obj");
+    model1->SetColour({ 255, 0, 0, 255 });
+    model2->SetColour({ 0, 255, 0, 255 });
+    model3->SetColour({ 0, 0, 255, 255 });
 
     std::vector<std::unique_ptr<Actor>> actors;
 
-    for (int i = 0; i < 10; i++)
-    {
-        Transform transform{ {randomf(-10.0f, 10.0f),randomf(-10.0f, 10.0f),randomf(-10.0f, 10.0f)}, glm::vec3{0,0,180}, glm::vec3{3}};
-        std::unique_ptr<Actor> actor = std::make_unique<Actor>(transform, model);
-        actor->SetColour({ (uint8_t)random(256), (uint8_t)random(256), (uint8_t)random(256, 255) });
-        actors.push_back(std::move(actor));
-    }
+    Transform transform1{ {20.0f, 20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{3}};
+    Transform transform2{ {20.0f, -20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{3}};
+    Transform transform3{ {-20.0f, 20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{3}};
+    std::unique_ptr<Actor> actor1 = std::make_unique<Actor>(transform1, model1);
+    std::unique_ptr<Actor> actor2 = std::make_unique<Actor>(transform2, model2);
+    std::unique_ptr<Actor> actor3 = std::make_unique<Actor>(transform3, model3);
+    actor1->SetColour({ 255, 0, 0 });
+    actor2->SetColour({ 0, 255, 0 });
+    actor3->SetColour({ 0, 0, 255 });
+    actors.push_back(std::move(actor1));
+    actors.push_back(std::move(actor2));
+    actors.push_back(std::move(actor3));
 
 
     bool quit = false;
@@ -117,23 +129,35 @@ int main(int argc, char* argv[])
         //PostProcess::Emboss(framebuffer.m_buffer, framebuffer.m_width, framebuffer.m_height);
 #pragma endregion
 
-        glm::vec3 direction{0};
-        if (input.GetKeyDown(SDL_SCANCODE_D)) direction.x = -1;
-        if (input.GetKeyDown(SDL_SCANCODE_A)) direction.x = 1;
-        if (input.GetKeyDown(SDL_SCANCODE_W)) direction.y = 1;
-        if (input.GetKeyDown(SDL_SCANCODE_S)) direction.y = -1;
-        if (input.GetKeyDown(SDL_SCANCODE_Q)) direction.z = 1;
-        if (input.GetKeyDown(SDL_SCANCODE_E)) direction.z = -1;
+        if (input.GetMouseButtonDown(2))
+        {
+            input.SetRelativeMode(true);
 
-        //cameraTransform.rotation.y += input.GetMousePositionDelta().x * 0.5f;
-        //cameraTransform.rotation.x -= input.GetMousePositionDelta().y * 0.5f;
+            glm::vec3 direction{0};
+            if (input.GetKeyDown(SDL_SCANCODE_D)) direction.x = 1;
+            if (input.GetKeyDown(SDL_SCANCODE_A)) direction.x = -1;
+            if (input.GetKeyDown(SDL_SCANCODE_W)) direction.y = 1;
+            if (input.GetKeyDown(SDL_SCANCODE_S)) direction.y = -1;
+            if (input.GetKeyDown(SDL_SCANCODE_Q)) direction.z = 1;
+            if (input.GetKeyDown(SDL_SCANCODE_E)) direction.z = -1;
 
-        glm::vec3 offset = cameraTransform.GetMatrix() * glm::vec4 {direction, 0};
+            cameraTransform.rotation.y += input.GetMouseRelative().x * 0.25f;
+            cameraTransform.rotation.x += input.GetMouseRelative().y * 0.25f;
 
-        cameraTransform.position += offset * 70.0f * time.GetDeltaTime();
+            glm::vec3 offset = cameraTransform.GetMatrix() * glm::vec4 {direction, 0};
+
+            cameraTransform.position += offset * 70.0f * time.GetDeltaTime();
+        }
+        else
+        {
+            input.SetRelativeMode(false);
+        }
+
         camera.SetView(cameraTransform.position, cameraTransform.position + cameraTransform.GetForward());
 
         //transform.rotation.z += 90 * time.GetDeltaTime();
+
+        framebuffer.DrawImage(0, 0, image);
 
         for (auto& actor : actors)
         {
