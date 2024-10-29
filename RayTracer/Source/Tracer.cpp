@@ -3,23 +3,38 @@
 #include "Camera.h"
 #include "Scene.h"
 
-colour3_t Tracer::Trace(Scene& scene, const ray_t& ray)
+colour3_t Tracer::Trace(Scene& scene, const ray_t& ray, float minDistance, float maxDistance)
 {
+	raycastHit_t raycastHit;
+	float closestDistance = maxDistance;
+	bool isHit = false;
+
 	// check for object hit in scene
 	for (auto& object : scene.m_objects)
 	{
-		if (object->Hit(ray))
+		if (object->Hit(ray, raycastHit, minDistance, closestDistance))
 		{
-			return { 1,0,0 };
+			isHit = true;
+			closestDistance = raycastHit.distance;
+			//return object->GetMaterial().lock()->GetColour();
 		}
 	}
 
+	if (isHit)
+	{
+		colour3_t attenuation;
+		ray_t scatter;
+		if (raycastHit.material.lock()->Scatter(ray, raycastHit, attenuation, scatter))
+		{
+			return attenuation * Trace(scene, scatter, minDistance, maxDistance);
+		}
+		//return raycastHit.material.lock()->GetColour();
+	}
 
 	//sky
-	colour3_t colour{ 0 };
 	glm::vec3 direction = glm::normalize(ray.direction);
 	float t = (direction.y + 1) * 0.5f;
-	colour = Lerp(colour3_t{ 1, 1, 1 }, colour3_t{ 0.5f, 0.7f, 1.0f }, t);
+	colour3_t colour = Lerp(colour3_t{ 1, 1, 1 }, colour3_t{ 0.5f, 0.7f, 1.0f }, t);
 
 	return colour;
 }

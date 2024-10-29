@@ -5,5 +5,5 @@
 class Tracer
 {
 public:
-	static colour3_t Trace(class Scene& scene, const ray_t& ray);
+	static colour3_t Trace(class Scene& scene, const ray_t& ray, float minDistance, float maxDistance);
 };
