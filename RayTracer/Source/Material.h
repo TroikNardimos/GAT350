@@ -25,3 +25,15 @@ public:
 	bool Scatter(const ray_t& ray, const raycastHit_t& raycastHit, colour3_t& attenuation, ray_t& scatter);
 
 };
+
+class Metal : public Material
+{
+public:
+	Metal(const colour3_t& albedo, float fuzz) : Material{ albedo }, m_fuzz{ fuzz } {}
+
+	bool Scatter(const ray_t& ray, const raycastHit_t& raycastHit, colour3_t& attenuation, ray_t& scatter);
+
+protected:
+	float m_fuzz = 0;
+
+};

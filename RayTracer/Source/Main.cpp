@@ -37,16 +37,18 @@ int main(int argc, char* argv[])
 
     Scene scene;
 
-    std::shared_ptr<Material> grey = std::make_shared<Lambertian>(colour3_t{ 0.5f });
-    std::shared_ptr<Material> black = std::make_shared<Lambertian>(colour3_t{ 0.0f });
-    std::shared_ptr<Material> white = std::make_shared<Lambertian>(colour3_t{ 1.0f });
-    std::shared_ptr<Material> red  = std::make_shared<Lambertian>(colour3_t{ 1, 0, 0 });
-    std::shared_ptr<Material> orange  = std::make_shared<Lambertian>(colour3_t{ 1, 0.5f, 0 });
-    std::shared_ptr<Material> yellow  = std::make_shared<Lambertian>(colour3_t{ 1, 1, 0 });
-    std::shared_ptr<Material> green  = std::make_shared<Lambertian>(colour3_t{ 0, 1, 0 });
-    std::shared_ptr<Material> blue = std::make_shared<Lambertian>(colour3_t{ 0, 0, 1 });
-    std::shared_ptr<Material> magenta = std::make_shared<Lambertian>(colour3_t{ 1, 0, 1 });
+    std::shared_ptr<Material> grey    = std::make_shared<Lambertian>(colour3_t{ 0.5f });
+    std::shared_ptr<Material> black   = std::make_shared<Lambertian>(colour3_t{ 0.0f });
+    std::shared_ptr<Material> white   = std::make_shared<Lambertian>(colour3_t{ 1.0f });
+    std::shared_ptr<Material> red     = std::make_shared<Lambertian>(colour3_t{ 1.0f, 0.0f, 0.0f });
+    std::shared_ptr<Material> orange  = std::make_shared<Lambertian>(colour3_t{ 1.0f, 0.5f, 0.0f });
+    std::shared_ptr<Material> yellow  = std::make_shared<Lambertian>(colour3_t{ 1.0f, 1.0f, 0.0f });
+    std::shared_ptr<Material> green   = std::make_shared<Lambertian>(colour3_t{ 0.0f, 1.0f, 0.0f });
+    std::shared_ptr<Material> blue    = std::make_shared<Lambertian>(colour3_t{ 0.0f, 0.0f, 1.0f });
+    std::shared_ptr<Material> magenta = std::make_shared<Lambertian>(colour3_t{ 1.0f, 0.0f, 1.0f });
+
     std::vector<std::shared_ptr<Material>> materials;
+
     materials.push_back(std::move(grey));
     materials.push_back(std::move(black));
     materials.push_back(std::move(white));
@@ -58,14 +60,14 @@ int main(int argc, char* argv[])
     materials.push_back(std::move(magenta));
 
     //std::shared_ptr<Material> material1 = std::make_shared<Lambertian>(glm::vec3{1,1,1});
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 1; i++)
     {
         auto object = std::make_unique<Sphere>(glm::vec3{randomf(-20.0f, 20.0f), randomf(-20.0f, 20.0f), randomf(-20.0f, 20.0f)}, randomf(1.0f, 5.0f), materials[random(materials.size() - 1)]);
         scene.AddObject(std::move(object));
     }
 
-    //std::shared_ptr<Material> material2 = std::make_shared<Lambertian>(glm::vec3{0,0,1});
-    auto plane = std::make_unique<Plane>(glm::vec3{ 0, -5, 0 }, glm::vec3{ 0, 1, 0 }, materials[0]);
+    std::shared_ptr<Material> metal = std::make_shared<Metal>(colour3_t{0.5f}, 0.2f);
+    auto plane = std::make_unique<Plane>(glm::vec3{ 0, -5, 0 }, glm::vec3{ 0, 1, 0 }, metal);
     scene.AddObject(std::move(plane));
 
     bool quit = false;
