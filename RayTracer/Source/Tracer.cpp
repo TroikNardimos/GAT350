@@ -2,9 +2,12 @@
 #include "Framebuffer.h"
 #include "Camera.h"
 #include "Scene.h"
+#include "Material.h"
 
-colour3_t Tracer::Trace(Scene& scene, const ray_t& ray, float minDistance, float maxDistance)
+colour3_t Tracer::Trace(Scene& scene, const ray_t& ray, float minDistance, float maxDistance, int depth)
 {
+	if (depth == 0) return colour3_t{ 0 };
+
 	raycastHit_t raycastHit;
 	float closestDistance = maxDistance;
 	bool isHit = false;
@@ -16,7 +19,6 @@ colour3_t Tracer::Trace(Scene& scene, const ray_t& ray, float minDistance, float
 		{
 			isHit = true;
 			closestDistance = raycastHit.distance;
-			//return object->GetMaterial().lock()->GetColour();
 		}
 	}
 
@@ -26,9 +28,12 @@ colour3_t Tracer::Trace(Scene& scene, const ray_t& ray, float minDistance, float
 		ray_t scatter;
 		if (raycastHit.material.lock()->Scatter(ray, raycastHit, attenuation, scatter))
 		{
-			return attenuation * Trace(scene, scatter, minDistance, maxDistance);
+			return attenuation * Trace(scene, scatter, minDistance, maxDistance, depth - 1);
 		}
-		//return raycastHit.material.lock()->GetColour();
+		else
+		{
+			return raycastHit.material.lock()->GetEmissive();
+		}
 	}
 
 	//sky

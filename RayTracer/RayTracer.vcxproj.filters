@@ -69,6 +69,9 @@
     <ClInclude Include="Source\Plane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Triangle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\PostProcess.cpp">
@@ -116,6 +119,9 @@
     <ClCompile Include="Source\Plane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Material.cpp" />
+    <ClCompile Include="Source\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Triangle.cpp" />
   </ItemGroup>
 </Project>
