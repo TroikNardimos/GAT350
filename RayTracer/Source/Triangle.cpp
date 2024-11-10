@@ -1,11 +1,36 @@
 #include "Triangle.h"
 #include "MathUtils.h"
 
+void Triangle::Update()
+{
+    m_v1 = m_transform * glm::vec4{m_local_v1, 0};
+    m_v2 = m_transform * glm::vec4{m_local_v2, 0};
+    m_v3 = m_transform * glm::vec4{m_local_v3, 0};
+}
+
 bool Triangle::Hit(const ray_t& ray, raycastHit_t& raycastHit, float minDistance, float maxDistance)
 {
-    // set edges of the triangle
+    float t;
+    if (!Raycast(ray, m_v1, m_v2, m_v3, minDistance, maxDistance, t)) return false;
+
+    // set raycast hit
+    raycastHit.distance = t;
+    raycastHit.point = ray.at(t);
+
     glm::vec3 edge1 = m_v2 - m_v1;
     glm::vec3 edge2 = m_v3 - m_v1;
+
+    raycastHit.normal = glm::normalize(glm::cross(edge1, edge2));
+    raycastHit.material = GetMaterial();
+
+    return true;
+}
+
+bool Triangle::Raycast(const ray_t& ray, const glm::vec3& v1, const glm::vec3& v2, const glm::vec3& v3, float minDistance, float maxDistance, float& t)
+{
+    // set edges of the triangle
+    glm::vec3 edge1 = v2 - v1;
+    glm::vec3 edge2 = v3 - v1;
 
     // calculate perpendicular vector, determine how aligned the ray is with the triangle plane
     glm::vec3 pvec = glm::cross(ray.direction, edge2);
@@ -22,7 +47,7 @@ bool Triangle::Hit(const ray_t& ray, raycastHit_t& raycastHit, float minDistance
     float invDet = 1 / determinant;
 
     // create direction vector from the triangle first vertex to the ray origin
-    glm::vec3 tvec = ray.origin - m_v1;
+    glm::vec3 tvec = ray.origin - v1;
     // Calculate u parameter for barycentric coordinates
     float u = glm::dot(tvec, pvec) * invDet;
     // Check if u is outside the bounds of the triangle, no intersection
@@ -33,7 +58,7 @@ bool Triangle::Hit(const ray_t& ray, raycastHit_t& raycastHit, float minDistance
 
     // Calculate qvec, a vector perpendicular to both tvec and edge1, used to find the v parameter
     glm::vec3 qvec = glm::cross(tvec, edge1);
-        // Calculate v parameter for barycentric coordinates
+    // Calculate v parameter for barycentric coordinates
     float v = glm::dot(qvec, ray.direction) * invDet;
     // Check if v is outside the bounds or if u + v exceeds 1, no intersection
     if (v < 0 || (u + v) > 1)
@@ -42,15 +67,9 @@ bool Triangle::Hit(const ray_t& ray, raycastHit_t& raycastHit, float minDistance
     }
 
     // Calculate intersection distance and check range
-    float t = glm::dot(edge2, qvec) * invDet;
+    t = glm::dot(edge2, qvec) * invDet;
     if (t >= minDistance && t <= maxDistance)
     {
-        // set raycast hit
-        raycastHit.distance = t;
-        raycastHit.point = ray.at(t);
-        raycastHit.normal = glm::normalize(glm::cross(edge1, edge2));
-        raycastHit.material = GetMaterial();
-
         return true;
     }
 

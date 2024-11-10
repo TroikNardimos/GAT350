@@ -5,7 +5,7 @@
 class Material
 {
 public:
-	Material() = default;
+	//Material() = default;
 	Material(const colour3_t& colour) : m_albedo{colour}{}
 
 	virtual bool Scatter(const ray_t& ray, const raycastHit_t& raycastHit, colour3_t& attenuation, ray_t& scatter) const = 0;
@@ -14,7 +14,7 @@ public:
 	virtual colour3_t GetEmissive() const { return colour3_t{ 0 }; }
 
 protected:
-	colour3_t m_albedo;
+	colour3_t m_albedo{0};
 
 };
 
