@@ -1,24 +1,25 @@
 #pragma once
 #include "Colour.h"
+#include "VertexShader.h"
 
 #include <glm\glm.hpp>
 #include <vector>
 #include <string>
 
-using vertex_t = glm::vec3;
-using vertices_t = std::vector<vertex_t>;
+//using vertex_t = glm::vec3;
+//using vertices_t = std::vector<vertex_t>;
 
 class Model
 {
 public:
 	Model() = default;
-	Model(const vertices_t& vertices, const colour_t& colour) : m_vertices{ vertices }, m_colour{colour} {}
+	Model(const vertexbuffer_t& vertices, const colour4_t& colour) : m_vb{ vertices }, m_colour{colour} {}
 
-	void Draw(class Framebuffer& framebuffer, const glm::mat4& model, const class Camera& camera);
+	void Draw();
 	bool Load(const std::string& filename);
-	void SetColour(const colour_t& colour) { m_colour = colour; }
+	void SetColour(const colour4_t& colour) { m_colour = colour; }
 
 private:
-	vertices_t m_vertices;
-	colour_t m_colour;
+	vertexbuffer_t m_vb;
+	colour4_t m_colour{1};
 };

@@ -24,6 +24,7 @@ void InitScene(Scene& scene);
 void InitScene01(Scene& scene, Camera& camera);
 void InitFinalScene(Scene& scene, Camera& camera);
 void InitSceneCornell(Scene& scene, Camera& camera);
+void InitSceneRealTime(Scene& scene, Camera& camera);
 
 int main(int argc, char* argv[])
 {
@@ -41,10 +42,10 @@ int main(int argc, char* argv[])
     camera.SetView({ 0,0,-20 }, { 0,0,0 });
 
     Scene scene;
-    InitFinalScene(scene, camera);
+    InitSceneRealTime(scene, camera);
     
     scene.Update();
-    scene.Render(framebuffer, camera, 100, 10);
+    scene.Render(framebuffer, camera, 10, 10);
     framebuffer.Update();
 
     bool quit = false;
@@ -73,6 +74,16 @@ int main(int argc, char* argv[])
     }
 	return 0;
 }
+
+void InitSceneRealTime(Scene& scene, Camera& camera)
+{
+    std::shared_ptr<Material> red = std::make_shared<Lambertian>(colour3_t{ 1.0f, 0.0f, 0.0f });
+
+    auto model = std::make_unique<Model>(Transform{ glm::vec3{0,0,0}, glm::vec3{0,0,0}, glm::vec3{1} }, red);
+
+    model->Load("Models/sphere.obj");
+}
+
 
 void InitScene(Scene& scene)
 {

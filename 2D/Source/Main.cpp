@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "Actor.h"
 #include "Random.h"
+#include "Shader.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -40,39 +41,33 @@ int main(int argc, char* argv[])
     Framebuffer framebuffer(renderer, 800, 600);
 
     Image image;
-    image.Load("landscape.jpg");
+    //image.Load("landscape.jpg");
 
     Image imageAlpha;
     imageAlpha.Load("colours.png");
     PostProcess::Alpha(imageAlpha.m_buffer, 100);
 
-    //vertices_t vertices = { { -5, 5, 0 }, { 5, 5, 0 }, { -5, -5, 0 } };
-    //Model model(vertices, { 0,255,0,255 });
+    Shader::uniforms.view = camera.GetView();
+    Shader::uniforms.projection = camera.GetProjection();
+    Shader::uniforms.ambient = colour3_t{ 0.1f };
 
-    std::shared_ptr<Model> model1 = std::make_shared<Model>();
-    std::shared_ptr<Model> model2 = std::make_shared<Model>();
-    std::shared_ptr<Model> model3 = std::make_shared<Model>();
-    model1->Load("teapot.obj");
-    model2->Load("sphere.obj");
-    model3->Load("torus.obj");
-    model1->SetColour({ 255, 0, 0, 255 });
-    model2->SetColour({ 0, 255, 0, 255 });
-    model3->SetColour({ 0, 0, 255, 255 });
+    Shader::uniforms.light.position = glm::vec3{ 10, 10, -10 };
+    Shader::uniforms.light.direction = glm::vec3{ 0, -1, 0 }; // light pointing down
+    Shader::uniforms.light.colour = colour3_t{ 0,1,0 }; // white light
+
+    Shader::framebuffer = &framebuffer;
+
+    std::shared_ptr<Model> model = std::make_shared<Model>();
+    model->Load("Models/cube.obj");
+    model->SetColour({ 1, 0, 1, 1 });
 
     std::vector<std::unique_ptr<Actor>> actors;
 
-    Transform transform1{ {20.0f, 20.0f, 20.0f}, glm::vec3{0,0,45}, glm::vec3{3}};
-    Transform transform2{ {20.0f, -20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{3}};
-    Transform transform3{ {-20.0f, 20.0f, 20.0f}, glm::vec3{0,0,0}, glm::vec3{10}};
-    std::unique_ptr<Actor> actor1 = std::make_unique<Actor>(transform1, model1);
-    std::unique_ptr<Actor> actor2 = std::make_unique<Actor>(transform2, model2);
-    std::unique_ptr<Actor> actor3 = std::make_unique<Actor>(transform3, model3);
-    actor1->SetColour({ 255, 0, 0 });
-    actor2->SetColour({ 0, 255, 0 });
-    actor3->SetColour({ 0, 0, 255 });
-    actors.push_back(std::move(actor1));
-    actors.push_back(std::move(actor2));
-    actors.push_back(std::move(actor3));
+    {
+        Transform transform{ glm::vec3{-5,0,0}, glm::vec3{0}, glm::vec3{5} };
+        std::unique_ptr<Actor> actor = std::make_unique<Actor>(transform, model);
+        actors.push_back(std::move(actor));
+    }
 
 
     bool quit = false;
@@ -136,17 +131,17 @@ int main(int argc, char* argv[])
             glm::vec3 direction{0};
             if (input.GetKeyDown(SDL_SCANCODE_D)) direction.x = 1;
             if (input.GetKeyDown(SDL_SCANCODE_A)) direction.x = -1;
-            if (input.GetKeyDown(SDL_SCANCODE_W)) direction.y = 1;
-            if (input.GetKeyDown(SDL_SCANCODE_S)) direction.y = -1;
-            if (input.GetKeyDown(SDL_SCANCODE_Q)) direction.z = 1;
-            if (input.GetKeyDown(SDL_SCANCODE_E)) direction.z = -1;
+            if (input.GetKeyDown(SDL_SCANCODE_Q)) direction.y = 1;
+            if (input.GetKeyDown(SDL_SCANCODE_E)) direction.y = -1;
+            if (input.GetKeyDown(SDL_SCANCODE_W)) direction.z = 1;
+            if (input.GetKeyDown(SDL_SCANCODE_S)) direction.z = -1;
 
             cameraTransform.rotation.y += input.GetMouseRelative().x * 0.25f;
             cameraTransform.rotation.x += input.GetMouseRelative().y * 0.25f;
 
             glm::vec3 offset = cameraTransform.GetMatrix() * glm::vec4 {direction, 0};
 
-            cameraTransform.position += offset * 70.0f * time.GetDeltaTime();
+            cameraTransform.position += offset * 40.0f * time.GetDeltaTime();
         }
         else
         {
@@ -154,6 +149,7 @@ int main(int argc, char* argv[])
         }
 
         camera.SetView(cameraTransform.position, cameraTransform.position + cameraTransform.GetForward());
+        Shader::uniforms.view = camera.GetView();
 
         //transform.rotation.y += 90 * time.GetDeltaTime();
 
@@ -161,7 +157,8 @@ int main(int argc, char* argv[])
 
         for (auto& actor : actors)
         {
-            actor->Draw(framebuffer, camera);
+            actor->GetTransfrom().rotation.y += time.GetDeltaTime() * 90;
+            actor->Draw();
         }
 
         framebuffer.Update();
