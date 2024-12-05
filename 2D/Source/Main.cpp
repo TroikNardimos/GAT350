@@ -53,27 +53,36 @@ int main(int argc, char* argv[])
 
     Shader::uniforms.light.position = glm::vec3{ 10, 10, -10 };
     Shader::uniforms.light.direction = glm::vec3{ 0, -1, 0 }; // light pointing down
-    Shader::uniforms.light.colour = colour3_t{ 1,0,0 }; // white light
+    Shader::uniforms.light.colour = colour3_t{ 1,1,1 }; // white light
 
     Shader::framebuffer = &framebuffer;
 
     std::shared_ptr<Model> model = std::make_shared<Model>();
     model->Load("Models/ogre.obj");
-    model->SetColour({ 1, 0, 1, 1 });
 
-    //std::shared_ptr<material_t> material = std::make_shared<material_t>();
-    //material->albedo = colour3_t{ 0, 0, 1 };
-    //material->specular = colour3_t{ 1 };
-    //material->shininess = 32.0f;
+    std::shared_ptr<material_t> blue = std::make_shared<material_t>();
+    blue->albedo = colour3_t{ 0, 0, 1 };
+    blue->specular = colour3_t{ 1 };
+    blue->shininess = 128.0f;
+
+    std::shared_ptr<material_t> red = std::make_shared<material_t>();
+    red->albedo = colour3_t{ 1, 0, 0 };
+    red->specular = colour3_t{ 1 };
+    red->shininess = 16.0f;
 
     std::vector<std::unique_ptr<Actor>> actors;
 
     {
         Transform transform{ glm::vec3{-5,0,0}, glm::vec3{0}, glm::vec3{5} };
-        std::unique_ptr<Actor> actor = std::make_unique<Actor>(transform, model);
+        std::unique_ptr<Actor> actor = std::make_unique<Actor>(transform, model, blue);
         actors.push_back(std::move(actor));
     }
 
+    {
+        Transform transform{ glm::vec3{5,0,0}, glm::vec3{0}, glm::vec3{5} };
+        std::unique_ptr<Actor> actor = std::make_unique<Actor>(transform, model, red);
+        actors.push_back(std::move(actor));
+    }
 
     bool quit = false;
     while (!quit)

@@ -48,8 +48,8 @@ namespace Rasterizer
 
 					// create fragment shader input
 					fragment_input_t fragment;
-					fragment.position = w0 * v0.position + w1 * v1.position + w2 * v2.position;
-					fragment.normal = w0 * v0.normal + w1 * v1.normal + w2 * v2.normal;
+					//fragment.position = w0 * v0.position + w1 * v1.position + w2 * v2.position;
+					//fragment.normal = w0 * v0.normal + w1 * v1.normal + w2 * v2.normal;
 					fragment.colour = colour4_t{ colour, 1 };
 					
 					// call fragment shader

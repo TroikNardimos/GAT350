@@ -7,10 +7,10 @@
 class Actor
 {
 public:
-	Actor(const Transform& transform, std::shared_ptr<Model> model)://, std::shared_ptr<material_t> material) : 
+	Actor(const Transform& transform, std::shared_ptr<Model> model, std::shared_ptr<material_t> material) : 
 		m_transform{ transform }, 
-		m_model{ model }
-		//m_material{material} 
+		m_model{ model },
+		m_material{material} 
 	{}
 
 	Transform& GetTransfrom() { return m_transform; }
