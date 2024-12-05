@@ -12,6 +12,9 @@ Shader::uniforms_t Shader::uniforms =
 
 Framebuffer* Shader::framebuffer{ nullptr };
 
+Shader::eFrontFace Shader::front_face = Shader::eFrontFace::CW;
+Shader::eCullMode Shader::cull_mode = Shader::eCullMode::BACK;
+
 void Shader::Draw(const vertexbuffer_t& vb)
 {
 	// vertex shader
@@ -36,6 +39,25 @@ void Shader::Draw(const vertexbuffer_t& vb)
 		if (!ToScreen(v0, s0)) continue;
 		if (!ToScreen(v1, s1)) continue;
 		if (!ToScreen(v2, s2)) continue;
+
+		// Compute signed area (cross product)
+		float z = cross(s1 - s0, s2 - s0);
+
+		// cull faces
+		switch (cull_mode)
+		{
+		case FRONT:
+			if (z < 0 && CW) continue;
+			if (z > 0 && CCW) continue;
+			break;
+		case BACK:
+			if (z > 0 && CW) continue;
+			if (z < 0 && CCW) continue;
+			break;
+		case NONE:
+
+			break;
+		}
 
 		// rasterization
 		Rasterizer::Triangle(*framebuffer, s0, s1, s2, v0, v1, v2);

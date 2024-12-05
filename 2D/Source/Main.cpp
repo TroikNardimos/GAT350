@@ -53,13 +53,18 @@ int main(int argc, char* argv[])
 
     Shader::uniforms.light.position = glm::vec3{ 10, 10, -10 };
     Shader::uniforms.light.direction = glm::vec3{ 0, -1, 0 }; // light pointing down
-    Shader::uniforms.light.colour = colour3_t{ 0,1,0 }; // white light
+    Shader::uniforms.light.colour = colour3_t{ 1,0,0 }; // white light
 
     Shader::framebuffer = &framebuffer;
 
     std::shared_ptr<Model> model = std::make_shared<Model>();
-    model->Load("Models/cube.obj");
+    model->Load("Models/ogre.obj");
     model->SetColour({ 1, 0, 1, 1 });
+
+    //std::shared_ptr<material_t> material = std::make_shared<material_t>();
+    //material->albedo = colour3_t{ 0, 0, 1 };
+    //material->specular = colour3_t{ 1 };
+    //material->shininess = 32.0f;
 
     std::vector<std::unique_ptr<Actor>> actors;
 

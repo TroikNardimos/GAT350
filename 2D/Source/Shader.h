@@ -1,6 +1,7 @@
 #pragma once
 #include "VertexShader.h"
 #include "FragmentShader.h"
+#include "Material.h"
 
 class Shader
 {
@@ -15,6 +16,22 @@ public:
 		//lights
 		light_t light;
 		colour3_t ambient;
+
+		//materials
+		material_t material;
+	};
+
+	enum eFrontFace
+	{
+		CW,
+		CCW
+	};
+
+	enum eCullMode
+	{
+		FRONT,
+		BACK,
+		NONE
 	};
 public:
 	static void Draw(const vertexbuffer_t& vb);
@@ -22,6 +39,8 @@ public:
 
 public:
 	static class Framebuffer* framebuffer;
+	static eFrontFace front_face;
+	static eCullMode cull_mode;
 
 	static uniforms_t uniforms;
 };
