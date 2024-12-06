@@ -28,7 +28,7 @@ namespace Rasterizer
 				// this gives us twice the signed area of the whole triangle using the cross product
 				float area = cross(p1 - p0, p2 - p0);
 				// the sign tells us triangle winding (clockwise/counterclockwise)
-				//if (area <= 0) return;
+				if (area <= 0) return;
 				//if (std::abs(area) < std::numeric_limits<float>::epsilon()) return;
 
 				// area of subtriangles divided by total area
@@ -38,19 +38,18 @@ namespace Rasterizer
 
 				if (w0 >= 0 && w1 >= 0 && w2 >= 0) 
 				{
-					// interpolate vertex attributes
-					colour3_t colour = w0 * v0.colour + w1 * v1.colour + w2 * v2.colour;
-					float z = w0 * v0.position.z + w1 * v1.position.z + w2 * v2.position.z;
-
 					//check z buffer
+					float z = w0 * v0.position.z + w1 * v1.position.z + w2 * v2.position.z;
 					if (CheckDepth(framebuffer, p, z)) WriteDepth(framebuffer, p, z);
 					else continue;
 
 					// create fragment shader input
+					// interpolate vertex attributes
 					fragment_input_t fragment;
-					//fragment.position = w0 * v0.position + w1 * v1.position + w2 * v2.position;
-					//fragment.normal = w0 * v0.normal + w1 * v1.normal + w2 * v2.normal;
-					fragment.colour = colour4_t{ colour, 1 };
+					colour3_t colour = w0 * v0.colour + w1 * v1.colour + w2 * v2.colour;
+					fragment.position = w0 * v0.position + w1 * v1.position + w2 * v2.position;
+					fragment.normal = w0 * v0.normal + w1 * v1.normal + w2 * v2.normal;
+					//fragment.colour = colour4_t{ colour, 1 };
 					
 					// call fragment shader
 					colour4_t output_color = FragmentShader::Process(fragment);

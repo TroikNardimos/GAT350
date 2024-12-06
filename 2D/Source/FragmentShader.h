@@ -3,8 +3,8 @@
 
 struct fragment_input_t
 {
-	//glm::vec3 position;
-	//glm::vec3 normal;
+	glm::vec3 position;
+	glm::vec3 normal;
 	colour4_t colour;
 };
 

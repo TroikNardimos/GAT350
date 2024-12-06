@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
     Shader::framebuffer = &framebuffer;
 
     std::shared_ptr<Model> model = std::make_shared<Model>();
-    model->Load("Models/ogre.obj");
+    model->Load("Models/cube.obj");
 
     std::shared_ptr<material_t> blue = std::make_shared<material_t>();
     blue->albedo = colour3_t{ 0, 0, 1 };
